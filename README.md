@@ -5,7 +5,7 @@
 ---
 
 ## 🚀 Live Demo  
-[👉 View Live on Render](https://mernstack-thinkboard-1.onrender.com)  
+[👉 View Live on Render](https://suhails-thinkboard-if7d.onrender.com)  
 
 ---
 
