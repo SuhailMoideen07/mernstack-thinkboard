@@ -1,28 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
-import toast from "react-hot-toast";
-import { LoaderIcon, ArrowLeftIcon, Trash2Icon } from "lucide-react";
+import { useEffect } from "react";
+import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router";
 import api from "../lib/axios";
+import toast from "react-hot-toast";
+import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from "lucide-react";
 
 const NoteDetailPage = () => {
-  const [note, setNote] = useState({ title: "", content: "" });
+  const [note, setNote] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
   const navigate = useNavigate();
+
   const { id } = useParams();
 
   useEffect(() => {
     const fetchNote = async () => {
       try {
         const res = await api.get(`/notes/${id}`);
-        setNote(res.data); // Make sure your API returns {title, content}
+        setNote(res.data);
       } catch (error) {
-        console.error("Error in fetching notes:", error);
+        console.log("Error in fetching note", error);
         toast.error("Failed to fetch the note");
       } finally {
         setLoading(false);
       }
     };
+
     fetchNote();
   }, [id]);
 
@@ -34,24 +38,25 @@ const NoteDetailPage = () => {
       toast.success("Note deleted");
       navigate("/");
     } catch (error) {
-      console.error("Error deleting the note:", error);
+      console.log("Error deleting the note:", error);
       toast.error("Failed to delete note");
     }
   };
 
   const handleSave = async () => {
     if (!note.title.trim() || !note.content.trim()) {
-      toast.error("Please add a title and content");
+      toast.error("Please add a title or content");
       return;
     }
 
     setSaving(true);
+
     try {
       await api.put(`/notes/${id}`, note);
       toast.success("Note updated successfully");
       navigate("/");
     } catch (error) {
-      console.error("Error saving the note:", error);
+      console.log("Error saving the note:", error);
       toast.error("Failed to update note");
     } finally {
       setSaving(false);
@@ -120,5 +125,4 @@ const NoteDetailPage = () => {
     </div>
   );
 };
-
 export default NoteDetailPage;
